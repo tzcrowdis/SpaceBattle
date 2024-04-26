@@ -19,6 +19,9 @@ public class PortalSpawner : MonoBehaviour
     Quaternion temp;
     Vector3 leftControllerRotation;
     Vector3 rightControllerRotation;
+    Vector3 previousRotation;
+    Vector3 currentRotation;
+    Vector3 deltaRotation;
 
     float previousDistance = 0f;
     float currentDistance;
@@ -68,12 +71,17 @@ public class PortalSpawner : MonoBehaviour
 
                     //TODO: limit portal size (and create steps?)
 
-                    //orientation should be based on controllers
+                    //position and orientation are based on the controllers
+                    midpoint = (leftControllerPosition + rightControllerPosition + 2 * transform.GetChild(3).transform.position) / 2; //CLOSE BUT NOT PERFECT
+                    portal.transform.position = midpoint;
+
+                    //portal.transform.localRotation = Quaternion.Euler(leftControllerRotation + new Vector3(90f, 0f, 0f));
+                    //portal.transform.Rotate(deltaRotation);
                 }
                 else 
                 {
                     //if portal scale is zero then destroy it when one of the buttons is released
-                    if (portal.transform.localScale == Vector3.zero) //CANT GET ZERO RIGHT NOW
+                    if (portal.transform.localScale.magnitude < 0.1)
                         Destroy(portal);
                 }
             }
@@ -104,6 +112,10 @@ public class PortalSpawner : MonoBehaviour
         leftControllerRotation = temp.eulerAngles;
         rightController.TryGetFeatureValue(CommonUsages.deviceRotation, out temp);
         rightControllerRotation = temp.eulerAngles;
+
+        //currentRotation = (leftControllerRotation + rightControllerRotation) / 2;
+        //deltaRotation = currentRotation - previousRotation;
+        //previousRotation = currentRotation;
 
         //trigger
         leftController.TryGetFeatureValue(CommonUsages.triggerButton, out leftTriggerHeld);
