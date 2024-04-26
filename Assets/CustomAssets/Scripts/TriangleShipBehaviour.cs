@@ -4,15 +4,158 @@ using UnityEngine;
 
 public class TriangleShipBehaviour : MonoBehaviour
 {
-    // Start is called before the first frame update
+    public float attackDistance;
+    public float evadeDistance;
+    public float fleeDistance;
+    public float turnDistance;
+    public float findDistance;
+
+    public float fleeSpeed;
+    public float attackSpeed;
+    public float turnSpeed;
+
+    int turnDirection;
+
+    GameObject projectileResource;
+    GameObject projectile;
+    Transform shootPosition;
+    public float rateOfFire;
+    float shootTime;
+    float projectileSpeed = 1.5f;
+
+    public GameObject enemy;
+    float distanceToEnemy;
+
+    enum State
+    {
+        Attack,
+        Evade,
+        Flee,
+        Turn,
+        Find
+    }
+    State state;
+
     void Start()
     {
+        projectileResource = Resources.Load("TriangleShipProjectile") as GameObject;
+        shootPosition = transform.GetChild(0);
+        shootTime = 0f;
+
+        turnDirection = 0;
         
+        state = State.Find;
     }
 
-    // Update is called once per frame
     void Update()
     {
-        
+        GetNextState();
+
+        if (state == State.Attack)
+            Attack();
+        else if (state == State.Evade)
+            TurnForFlee();
+        else if (state == State.Flee)
+            Flee();
+        else if (state == State.Turn)
+            TurnBackForAttack();
+        else if (state == State.Find)
+            ApproachAttackRange();
+
+        Debug.Log(state);
+    }
+
+    void GetNextState()
+    {
+        distanceToEnemy = Vector3.Distance(transform.position, enemy.transform.position);
+
+        if (state == State.Find && distanceToEnemy < attackDistance)
+            state = State.Attack;
+        else if (state == State.Attack && distanceToEnemy < evadeDistance)
+            state = State.Evade;
+        else if (state == State.Evade && distanceToEnemy > fleeDistance)
+            state = State.Flee;
+        else if (state == State.Flee && distanceToEnemy > turnDistance)
+            state = State.Turn;
+        else if (state == State.Turn && distanceToEnemy < attackDistance)
+            state = State.Attack;
+
+        if (enemy == null | distanceToEnemy > findDistance)
+            state = State.Find;
+
+        if (state != State.Turn | state != State.Evade)
+            turnDirection = 0;
+    }
+
+    void Attack()
+    {
+        //fly straight towards enemy at attack speed
+        //Vector3 goal = (enemy.transform.position - transform.position).normalized;
+        transform.rotation = Quaternion.Euler(enemy.transform.position - transform.position);
+        transform.position += attackSpeed * (enemy.transform.position - transform.position).normalized * Time.deltaTime;
+
+        //shoot projectiles straight ahead at rate of fire
+        shootTime += Time.deltaTime;
+        if (shootTime >= rateOfFire)
+        {
+            projectile = Instantiate(projectileResource, shootPosition);
+            projectile.transform.position = Vector3.zero;
+            projectile.transform.rotation = Quaternion.Euler(90f, 0f, 0f);
+            projectile.transform.SetParent(null);
+            projectile.transform.localScale = new Vector3(0.02f, 0.02f, 0.02f);
+            projectile.GetComponent<Rigidbody>().velocity = projectileSpeed * transform.forward;
+            shootTime = 0f;
+        }
+    }
+
+    void TurnForFlee()
+    {
+        //pick random direction
+        if (turnDirection == 0)
+            turnDirection = Random.Range(1, 2);
+
+        //turn away from enemy (on y-axis) at flee speed
+        transform.position += fleeSpeed * transform.forward * Time.deltaTime;
+        if (turnDirection == 1)
+            transform.Rotate(turnSpeed * transform.up);
+        else if (turnDirection == 2)
+            transform.Rotate(turnSpeed * -transform.up);
+    }
+
+    void Flee()
+    {
+        //move straight away from enemy at flee speed
+        transform.rotation = Quaternion.Euler((transform.position - enemy.transform.position).normalized);
+        transform.position += fleeSpeed * (transform.position - enemy.transform.position).normalized * Time.deltaTime;
+    }
+
+    void TurnBackForAttack()
+    {
+        //pick random direction
+        if (turnDirection == 0)
+            turnDirection = Random.Range(1, 2);
+
+        //turn at flee speed
+        transform.position += fleeSpeed * transform.forward * Time.deltaTime;
+        if (turnDirection == 1)
+            transform.Rotate(turnSpeed * transform.up);
+        else if (turnDirection == 2)
+            transform.Rotate(turnSpeed * -transform.up);
+    }
+
+    void ApproachAttackRange()
+    {
+        if (enemy == null)
+            GetNextEnemy();
+
+        //move straight towards enemy
+        transform.rotation = Quaternion.Euler(enemy.transform.position - transform.position);
+        transform.position += fleeSpeed * (enemy.transform.position - transform.position).normalized * Time.deltaTime;
+    }
+
+    void GetNextEnemy()
+    {
+        //get game object of enemy
+        //closest or some other criteria
     }
 }
