@@ -21,7 +21,7 @@ public class TriangleShipBehaviour : MonoBehaviour
     Transform shootPosition;
     public float rateOfFire;
     float shootTime;
-    float projectileSpeed = 1.5f;
+    float projectileSpeed = 0.5f;
 
     public GameObject enemy;
     float distanceToEnemy;
@@ -51,6 +51,11 @@ public class TriangleShipBehaviour : MonoBehaviour
     {
         GetNextState();
 
+        SetState();
+    }
+
+    void SetState()
+    {
         if (state == State.Attack)
             Attack();
         else if (state == State.Evade)
@@ -61,8 +66,6 @@ public class TriangleShipBehaviour : MonoBehaviour
             TurnBackForAttack();
         else if (state == State.Find)
             ApproachAttackRange();
-
-        Debug.Log(state);
     }
 
     void GetNextState()
@@ -90,20 +93,16 @@ public class TriangleShipBehaviour : MonoBehaviour
     void Attack()
     {
         //fly straight towards enemy at attack speed
-        //Vector3 goal = (enemy.transform.position - transform.position).normalized;
-        transform.rotation = Quaternion.Euler(enemy.transform.position - transform.position);
+        transform.rotation = Quaternion.LookRotation((enemy.transform.position - transform.position).normalized);
         transform.position += attackSpeed * (enemy.transform.position - transform.position).normalized * Time.deltaTime;
 
         //shoot projectiles straight ahead at rate of fire
         shootTime += Time.deltaTime;
         if (shootTime >= rateOfFire)
         {
-            projectile = Instantiate(projectileResource, shootPosition);
-            projectile.transform.position = Vector3.zero;
-            projectile.transform.rotation = Quaternion.Euler(90f, 0f, 0f);
-            projectile.transform.SetParent(null);
+            projectile = Instantiate(projectileResource, shootPosition.position, Quaternion.Euler(90f, transform.rotation.eulerAngles.y, transform.rotation.eulerAngles.z));
             projectile.transform.localScale = new Vector3(0.02f, 0.02f, 0.02f);
-            projectile.GetComponent<Rigidbody>().velocity = projectileSpeed * transform.forward;
+            projectile.GetComponent<Rigidbody>().velocity = projectileSpeed * transform.forward + attackSpeed * transform.forward;
             shootTime = 0f;
         }
     }
@@ -125,7 +124,7 @@ public class TriangleShipBehaviour : MonoBehaviour
     void Flee()
     {
         //move straight away from enemy at flee speed
-        transform.rotation = Quaternion.Euler((transform.position - enemy.transform.position).normalized);
+        transform.rotation = Quaternion.LookRotation((transform.position - enemy.transform.position).normalized);
         transform.position += fleeSpeed * (transform.position - enemy.transform.position).normalized * Time.deltaTime;
     }
 
@@ -149,7 +148,7 @@ public class TriangleShipBehaviour : MonoBehaviour
             GetNextEnemy();
 
         //move straight towards enemy
-        transform.rotation = Quaternion.Euler(enemy.transform.position - transform.position);
+        transform.rotation = Quaternion.LookRotation((enemy.transform.position - transform.position).normalized);
         transform.position += fleeSpeed * (enemy.transform.position - transform.position).normalized * Time.deltaTime;
     }
 

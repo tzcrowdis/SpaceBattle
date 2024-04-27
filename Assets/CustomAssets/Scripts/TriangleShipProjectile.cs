@@ -23,6 +23,8 @@ public class TriangleShipProjectile : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
+        //Debug.Log(collision.gameObject.name);
+
         DestroyProjectile();
 
         //do damage if hit ship(   322211111111) <- cats contribution
