@@ -50,7 +50,6 @@ public class TriangleShipBehaviour : MonoBehaviour
     void Update()
     {
         GetNextState();
-
         SetState();
     }
 

@@ -77,7 +77,7 @@ public class PortalSpawner : MonoBehaviour
 
                     //portal.transform.rotation = Quaternion.Euler(leftControllerRotation + new Vector3(90f, 0f, 0f));
                     //portal.transform.Rotate(deltaRotation);
-                    portal.transform.rotation = Quaternion.LookRotation(currentRotation + new Vector3(90f, 0f, 0f));
+                    //portal.transform.rotation = Quaternion.LookRotation(currentRotation);
                 }
                 else 
                 {
@@ -114,7 +114,7 @@ public class PortalSpawner : MonoBehaviour
         rightController.TryGetFeatureValue(CommonUsages.deviceRotation, out temp);
         rightControllerRotation = temp.eulerAngles;
 
-        currentRotation = (leftControllerRotation + rightControllerRotation) / 2;
+        //currentRotation = (leftControllerRotation + rightControllerRotation) / 2;
         //deltaRotation = currentRotation - previousRotation;
         //previousRotation = currentRotation;
 
