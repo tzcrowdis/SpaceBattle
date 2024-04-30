@@ -333,6 +333,38 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9879b76d6ea04204fb164b414e886930, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &1060747410
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1060747411}
+  m_Layer: 0
+  m_Name: ShootPivot
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1060747411
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1060747410}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 1911994944}
+  m_Father: {fileID: 1681088633367123180}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1249617917
 GameObject:
   m_ObjectHideFlags: 0
@@ -569,11 +601,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5702325348214460575, guid: 1856018fc1748eb4fbd769bba3f34cc4, type: 3}
       propertyPath: m_Enabled
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5702325348214460575, guid: 1856018fc1748eb4fbd769bba3f34cc4, type: 3}
       propertyPath: turnSpeed
-      value: 0.1
+      value: 0.3
       objectReference: {fileID: 0}
     - target: {fileID: 5702325348214460575, guid: 1856018fc1748eb4fbd769bba3f34cc4, type: 3}
       propertyPath: rateOfFire
@@ -593,7 +625,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5702325348214460575, guid: 1856018fc1748eb4fbd769bba3f34cc4, type: 3}
       propertyPath: turnDistance
-      value: 10
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 5702325348214460575, guid: 1856018fc1748eb4fbd769bba3f34cc4, type: 3}
       propertyPath: evadeDistance
@@ -601,7 +633,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5702325348214460575, guid: 1856018fc1748eb4fbd769bba3f34cc4, type: 3}
       propertyPath: attackDistance
-      value: 10
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 6077254503508530915, guid: 1856018fc1748eb4fbd769bba3f34cc4, type: 3}
       propertyPath: m_LocalPosition.x
@@ -746,12 +778,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1911994943}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 2.29}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 2.99}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 1681088633367123180}
+  m_Father: {fileID: 1060747411}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1681088633367123177
 PrefabInstance:
@@ -766,6 +798,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1664824757}
     - target: {fileID: 791706636131121220, guid: 25759e874228f7b4a872820d74b4f484, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 791706636131121220, guid: 25759e874228f7b4a872820d74b4f484, type: 3}
       propertyPath: moveSpeed
       value: 1
       objectReference: {fileID: 0}
@@ -779,11 +815,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 791706636131121220, guid: 25759e874228f7b4a872820d74b4f484, type: 3}
       propertyPath: moveDistance
-      value: 2
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 791706636131121220, guid: 25759e874228f7b4a872820d74b4f484, type: 3}
       propertyPath: shootEndTime
-      value: 2
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 791706636131121220, guid: 25759e874228f7b4a872820d74b4f484, type: 3}
       propertyPath: projectileSpeed
@@ -838,7 +874,7 @@ PrefabInstance:
     m_AddedGameObjects:
     - targetCorrespondingSourceObject: {fileID: 6531691346584729425, guid: 25759e874228f7b4a872820d74b4f484, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 1911994944}
+      addedObject: {fileID: 1060747411}
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 5903913450557189611, guid: 25759e874228f7b4a872820d74b4f484, type: 3}
       insertIndex: -1

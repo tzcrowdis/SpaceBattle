@@ -6,22 +6,25 @@ using UnityEngine;
 
 public class CubeShipBehaviour : MonoBehaviour
 {
+    //movement vars
     public float moveDistance;
     public float moveSpeed;
-    int moveDirection;
+    bool moving;
     Vector3 direction;
     Vector3 startPosition;
+    Vector3 opposite;
+    float minAngle;
+    float angle;
+    List<Vector3> directions;
 
+    //patrol vars
     public float patrolSpeed;
 
-    public float turnSpeed;
-    Vector3 lookRotation;
-    float turnTime;
-    bool turnDone;
-
+    //shooting vars
     GameObject projectileResource;
     GameObject projectile;
     public float projectileSpeed;
+    Transform shootPivot;
     Transform shootPosition;
     public float shootEndTime;
     float shootTime;
@@ -32,7 +35,6 @@ public class CubeShipBehaviour : MonoBehaviour
     enum State
     {
         Move,
-        Spin,
         Shoot,
         Patrol
     }
@@ -40,13 +42,19 @@ public class CubeShipBehaviour : MonoBehaviour
 
     void Start()
     {
-        moveDirection = 0;
-
-        turnTime = 0f;
-        turnDone = false;
+        moving = false;
+        directions = new List<Vector3>{
+                transform.up,
+                -transform.up,
+                transform.right,
+                -transform.right,
+                transform.forward,
+                -transform.forward
+            };
 
         projectileResource = Resources.Load("CubeShipProjectile") as GameObject;
-        shootPosition = transform.GetChild(0);
+        shootPivot = transform.GetChild(0);
+        shootPosition = shootPivot.GetChild(0);
         shootTime = 0f;
         reloading = false;
         
@@ -55,24 +63,17 @@ public class CubeShipBehaviour : MonoBehaviour
 
     void Update()
     {
-        GetSetState();
-        
-        lookRotation = (enemy.transform.position - transform.position).normalized;
-        lookRotation.x = 0f;
-        lookRotation.z = 0f;
-
-        Debug.Log(state);
+        GetState();
+        Act();
     }
 
-    void GetSetState()
+    void GetState()
     {
         if (enemy != null)
         {
             if (state == State.Patrol)
                 state = State.Move;
             else if (state == State.Move & Vector3.Distance(transform.position, startPosition) >= moveDistance)
-                state = State.Spin;
-            else if (state == State.Spin & turnDone)
                 state = State.Shoot;
             else if (state == State.Shoot & reloading)
                 state = State.Move;
@@ -81,11 +82,12 @@ public class CubeShipBehaviour : MonoBehaviour
         {
             state = State.Patrol;
         }
+    }
 
+    void Act()
+    {
         if (state == State.Move)
             Move();
-        else if (state == State.Spin)
-            Spin();
         else if (state == State.Shoot)
             Shoot();
         else if (state == State.Patrol)
@@ -94,70 +96,47 @@ public class CubeShipBehaviour : MonoBehaviour
 
     void Move()
     {
-        //pick vector to best move away from enemy
-        //current implementation is random
-        if (moveDirection == 0)
+        //pick axis to best move away from enemy
+        if (!moving)
         {
-            moveDirection = Random.Range(1, 6);
-            switch (moveDirection)
+            opposite = (transform.position - enemy.transform.position).normalized;
+            minAngle = 180f;
+            foreach (Vector3 dir in directions)
             {
-                case 1: //up
-                    direction = transform.up;
-                    break;
-                case 2: //down
-                    direction = -transform.up;
-                    break;
-                case 3: //right
-                    direction = transform.right;
-                    break;
-                case 4: //left
-                    direction = -transform.right;
-                    break;
-                case 5: //forwards
-                    direction = transform.forward;
-                    break;
-                case 6: //backwards
-                    direction = -transform.forward;
-                    break;
+                angle = Vector3.Angle(opposite, dir);
+                if (angle < minAngle)
+                {
+                    minAngle = angle;
+                    direction = dir;
+                }
             }
+
             startPosition = transform.position;
+            moving = true;
             reloading = false;
-            turnDone = false;
         }
             
         transform.position += moveSpeed * direction * Time.deltaTime;
-    }
-
-    void Spin()
-    {
-        //rotate around y axis to face enemy
-
-        //lookRotation = (enemy.transform.position - transform.position).normalized;
-        //lookRotation.x = 0f;
-        //lookRotation.z = 0f;
-        //transform.Rotate(new Vector3(0f, turnSpeed, 0f));
-        
-        transform.rotation = Quaternion.Lerp(Quaternion.Euler(transform.forward), Quaternion.Euler(lookRotation), turnSpeed * Time.deltaTime);
-
-        turnTime += turnSpeed * Time.deltaTime;
-        if (turnTime >= 1f)
-        {
-            turnDone = true;
-        }
     }
 
     void Shoot()
     {
         //shoot projectile from shoot position at enemy
         shootTime += Time.deltaTime;
+
+        //TODO: play a charge up animation here
+
         if (shootTime >= shootEndTime)
         {
-            projectile = Instantiate(projectileResource, shootPosition.position, transform.rotation);
+            shootPivot.rotation = Quaternion.LookRotation((enemy.transform.position - transform.position).normalized);
+            
+            projectile = Instantiate(projectileResource, shootPosition.position, shootPosition.rotation);
+            projectile.transform.Rotate(new Vector3(90f, 0f, 0f));
             projectile.transform.localScale = new Vector3(0.02f, 0.02f, 0.02f);
             projectile.GetComponent<Rigidbody>().velocity = projectileSpeed * (enemy.transform.position - shootPosition.position).normalized;
 
             reloading = true;
-            moveDirection = 0;
+            moving = false;
             shootTime = 0;
         }
     }

@@ -50,10 +50,10 @@ public class TriangleShipBehaviour : MonoBehaviour
     void Update()
     {
         GetNextState();
-        SetState();
+        Act();
     }
 
-    void SetState()
+    void Act()
     {
         if (state == State.Attack)
             Attack();
@@ -110,14 +110,18 @@ public class TriangleShipBehaviour : MonoBehaviour
     {
         //pick random direction
         if (turnDirection == 0)
-            turnDirection = Random.Range(1, 2);
+            turnDirection = Random.Range(1, 5);
 
-        //turn away from enemy (on y-axis) at flee speed
+        //turn away from enemy at flee speed
         transform.position += fleeSpeed * transform.forward * Time.deltaTime;
         if (turnDirection == 1)
             transform.Rotate(turnSpeed * transform.up);
         else if (turnDirection == 2)
             transform.Rotate(turnSpeed * -transform.up);
+        else if (turnDirection == 3)
+            transform.Rotate(turnSpeed * transform.right);
+        else if (turnDirection == 4)
+            transform.Rotate(turnSpeed * -transform.right);
     }
 
     void Flee()
@@ -131,7 +135,7 @@ public class TriangleShipBehaviour : MonoBehaviour
     {
         //pick random direction
         if (turnDirection == 0)
-            turnDirection = Random.Range(1, 2);
+            turnDirection = Random.Range(1, 5);
 
         //turn at flee speed
         transform.position += fleeSpeed * transform.forward * Time.deltaTime;
@@ -139,6 +143,10 @@ public class TriangleShipBehaviour : MonoBehaviour
             transform.Rotate(turnSpeed * transform.up);
         else if (turnDirection == 2)
             transform.Rotate(turnSpeed * -transform.up);
+        else if (turnDirection == 3)
+            transform.Rotate(turnSpeed * transform.right);
+        else if (turnDirection == 4)
+            transform.Rotate(turnSpeed * -transform.right);
     }
 
     void ApproachAttackRange()
