@@ -38,7 +38,7 @@ public class TriangleShipBehaviour : MonoBehaviour
 
     void Start()
     {
-        projectileResource = Resources.Load("TriangleShipProjectile") as GameObject;
+        projectileResource = Resources.Load("TriangleProjectile") as GameObject;
         shootPosition = transform.GetChild(0);
         shootTime = 0f;
 
@@ -51,6 +51,8 @@ public class TriangleShipBehaviour : MonoBehaviour
     {
         GetNextState();
         Act();
+
+        Debug.Log(turnDirection);
     }
 
     void Act()
@@ -85,7 +87,7 @@ public class TriangleShipBehaviour : MonoBehaviour
         if (enemy == null | distanceToEnemy > findDistance)
             state = State.Find;
 
-        if (state != State.Turn | state != State.Evade)
+        if (state != State.Turn & state != State.Evade)
             turnDirection = 0;
     }
 
@@ -99,7 +101,7 @@ public class TriangleShipBehaviour : MonoBehaviour
         shootTime += Time.deltaTime;
         if (shootTime >= rateOfFire)
         {
-            projectile = Instantiate(projectileResource, shootPosition.position, Quaternion.Euler(90f, transform.rotation.eulerAngles.y, transform.rotation.eulerAngles.z));
+            projectile = Instantiate(projectileResource, shootPosition.position, shootPosition.rotation);
             projectile.transform.localScale = new Vector3(0.02f, 0.02f, 0.02f);
             projectile.GetComponent<Rigidbody>().velocity = projectileSpeed * transform.forward + attackSpeed * transform.forward;
             shootTime = 0f;

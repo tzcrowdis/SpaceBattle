@@ -19,6 +19,14 @@ public class CubeShipBehaviour : MonoBehaviour
 
     //patrol vars
     public float patrolSpeed;
+    Vector3 patrolDirection = Vector3.up; //temp, should get from central command
+
+    //charge vars
+    Vector3 center;
+    public float jitter;
+    float x;
+    float y;
+    float z;
 
     //shooting vars
     GameObject projectileResource;
@@ -52,7 +60,7 @@ public class CubeShipBehaviour : MonoBehaviour
                 -transform.forward
             };
 
-        projectileResource = Resources.Load("CubeShipProjectile") as GameObject;
+        projectileResource = Resources.Load("CubeProjectile") as GameObject;
         shootPivot = transform.GetChild(0);
         shootPosition = shootPivot.GetChild(0);
         shootTime = 0f;
@@ -121,17 +129,22 @@ public class CubeShipBehaviour : MonoBehaviour
 
     void Shoot()
     {
+        //charge up animation
+        if (shootTime == 0)
+            center = transform.position;
+        x = Random.Range(center.x - jitter, center.x + jitter);
+        y = Random.Range(center.y - jitter, center.y + jitter);
+        z = Random.Range(center.z - jitter, center.z + jitter);
+        transform.position = new Vector3(x, y, z);
+
         //shoot projectile from shoot position at enemy
         shootTime += Time.deltaTime;
-
-        //TODO: play a charge up animation here
-
         if (shootTime >= shootEndTime)
         {
+            transform.position = center;
             shootPivot.rotation = Quaternion.LookRotation((enemy.transform.position - transform.position).normalized);
             
             projectile = Instantiate(projectileResource, shootPosition.position, shootPosition.rotation);
-            projectile.transform.Rotate(new Vector3(90f, 0f, 0f));
             projectile.transform.localScale = new Vector3(0.02f, 0.02f, 0.02f);
             projectile.GetComponent<Rigidbody>().velocity = projectileSpeed * (enemy.transform.position - shootPosition.position).normalized;
 
@@ -143,6 +156,7 @@ public class CubeShipBehaviour : MonoBehaviour
 
     void Patrol()
     {
-        //meander around slowly
+        //move slowly in given direction
+        transform.position += patrolSpeed * patrolDirection * Time.deltaTime;
     }
 }

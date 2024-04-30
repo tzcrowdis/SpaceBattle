@@ -4,11 +4,15 @@ using UnityEngine;
 
 public class CubeShipProjectile : MonoBehaviour
 {
+    Vector3 rotationVec = new Vector3(0f, 0f, 1f);
+
     float lifetime = 20f;
     float t = 0f;
 
     void Update()
     {
+        transform.Rotate(rotationVec);
+        
         t += Time.deltaTime;
         if (t >= lifetime)
             DestroyProjectile();
