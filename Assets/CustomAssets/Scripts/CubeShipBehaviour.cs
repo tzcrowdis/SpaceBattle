@@ -6,6 +6,11 @@ using UnityEngine;
 
 public class CubeShipBehaviour : MonoBehaviour
 {
+    //combat vars
+    public int health;
+    GameObject explosionResource;
+    GameObject explosion;
+    
     //movement vars
     public float moveDistance;
     public float moveSpeed;
@@ -50,6 +55,8 @@ public class CubeShipBehaviour : MonoBehaviour
 
     void Start()
     {
+        explosionResource = Resources.Load("ExplosionParticles") as GameObject;
+        
         moving = false;
         directions = new List<Vector3>{
                 transform.up,
@@ -73,6 +80,9 @@ public class CubeShipBehaviour : MonoBehaviour
     {
         GetState();
         Act();
+
+        if (health <= 0)
+            BlowUp();
     }
 
     void GetState()
@@ -158,5 +168,15 @@ public class CubeShipBehaviour : MonoBehaviour
     {
         //move slowly in given direction
         transform.position += patrolSpeed * patrolDirection * Time.deltaTime;
+    }
+
+    void BlowUp()
+    {
+        explosion = Instantiate(explosionResource, transform.position, Quaternion.identity);
+        var main = explosion.GetComponent<ParticleSystem>().main;
+        main.startSize = 3f;
+        main.startColor = Color.white;
+
+        Destroy(gameObject);
     }
 }

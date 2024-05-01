@@ -736,12 +736,20 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1681088633367123178}
     - target: {fileID: 5702325348214460575, guid: 1856018fc1748eb4fbd769bba3f34cc4, type: 3}
+      propertyPath: health
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5702325348214460575, guid: 1856018fc1748eb4fbd769bba3f34cc4, type: 3}
+      propertyPath: angleMax
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 5702325348214460575, guid: 1856018fc1748eb4fbd769bba3f34cc4, type: 3}
       propertyPath: fleeSpeed
       value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 5702325348214460575, guid: 1856018fc1748eb4fbd769bba3f34cc4, type: 3}
       propertyPath: m_Enabled
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5702325348214460575, guid: 1856018fc1748eb4fbd769bba3f34cc4, type: 3}
       propertyPath: turnSpeed
@@ -749,7 +757,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5702325348214460575, guid: 1856018fc1748eb4fbd769bba3f34cc4, type: 3}
       propertyPath: rateOfFire
-      value: 1
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 5702325348214460575, guid: 1856018fc1748eb4fbd769bba3f34cc4, type: 3}
       propertyPath: attackSpeed
@@ -757,7 +765,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5702325348214460575, guid: 1856018fc1748eb4fbd769bba3f34cc4, type: 3}
       propertyPath: findDistance
-      value: 15
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 5702325348214460575, guid: 1856018fc1748eb4fbd769bba3f34cc4, type: 3}
       propertyPath: fleeDistance
@@ -765,7 +773,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5702325348214460575, guid: 1856018fc1748eb4fbd769bba3f34cc4, type: 3}
       propertyPath: turnDistance
-      value: 3
+      value: 2.5
       objectReference: {fileID: 0}
     - target: {fileID: 5702325348214460575, guid: 1856018fc1748eb4fbd769bba3f34cc4, type: 3}
       propertyPath: evadeDistance
@@ -773,7 +781,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5702325348214460575, guid: 1856018fc1748eb4fbd769bba3f34cc4, type: 3}
       propertyPath: attackDistance
-      value: 3
+      value: 2.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 5702325348214460575, guid: 1856018fc1748eb4fbd769bba3f34cc4, type: 3}
+      propertyPath: waitNewRotationTime
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 6077254503508530915, guid: 1856018fc1748eb4fbd769bba3f34cc4, type: 3}
       propertyPath: m_LocalPosition.x
@@ -945,6 +957,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1664824757}
     - target: {fileID: 791706636131121220, guid: 25759e874228f7b4a872820d74b4f484, type: 3}
+      propertyPath: health
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 791706636131121220, guid: 25759e874228f7b4a872820d74b4f484, type: 3}
       propertyPath: jitter
       value: 0.01
       objectReference: {fileID: 0}
@@ -966,7 +982,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 791706636131121220, guid: 25759e874228f7b4a872820d74b4f484, type: 3}
       propertyPath: moveDistance
-      value: 1
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 791706636131121220, guid: 25759e874228f7b4a872820d74b4f484, type: 3}
       propertyPath: shootEndTime

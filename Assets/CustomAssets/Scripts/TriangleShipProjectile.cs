@@ -4,8 +4,16 @@ using UnityEngine;
 
 public class TriangleShipProjectile : MonoBehaviour
 {
+    GameObject explosionResource;
+    GameObject explosion;
+
     float lifetime = 20f;
     float t = 0f;
+
+    void Start()
+    {
+        explosionResource = Resources.Load("ExplosionParticles") as GameObject;
+    }
 
     void Update()
     {
@@ -16,8 +24,10 @@ public class TriangleShipProjectile : MonoBehaviour
 
     void DestroyProjectile()
     {
-        //add effects here
-        
+        explosion = Instantiate(explosionResource, transform.position, Quaternion.identity);
+        var main = explosion.GetComponent<ParticleSystem>().main;
+        main.startColor = Color.yellow;
+
         Destroy(gameObject);
     }
 
@@ -28,5 +38,14 @@ public class TriangleShipProjectile : MonoBehaviour
         DestroyProjectile();
 
         //do damage if hit ship(   322211111111) <- cats contribution
+        if (collision.gameObject.name.Contains("TriangleShip"))
+        {
+            //friendly fire
+            collision.gameObject.GetComponent<TriangleShipBehaviour>().health -= 1;
+        }
+        else if (collision.gameObject.name.Contains("CubeShip"))
+        {
+            collision.gameObject.GetComponent<CubeShipBehaviour>().health -= 1;
+        }
     }
 }
