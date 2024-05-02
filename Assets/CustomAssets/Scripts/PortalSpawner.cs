@@ -38,6 +38,10 @@ public class PortalSpawner : MonoBehaviour
     GameObject portal;
     GameObject portalHolo;
 
+    float minScale = 0.05f;
+    float midScale = 0.15f;
+    float maxScale = 0.25f;
+
     bool lockPortal = false;
 
     void Start()
@@ -86,11 +90,11 @@ public class PortalSpawner : MonoBehaviour
 
                     //portal step sizes
                     if (0f < portal.transform.localScale.x & portal.transform.localScale.x < 0.1f)
-                        portalHolo.transform.localScale = 0.05f * Vector3.one;
+                        portalHolo.transform.localScale = minScale * Vector3.one;
                     else if (0.1f < portal.transform.localScale.x & portal.transform.localScale.x < 0.2f)
-                        portalHolo.transform.localScale = 0.15f * Vector3.one;
+                        portalHolo.transform.localScale = midScale * Vector3.one;
                     else if (0.2f < portal.transform.localScale.x & portal.transform.localScale.x < 0.3f)
-                        portalHolo.transform.localScale = 0.25f * Vector3.one;
+                        portalHolo.transform.localScale = maxScale * Vector3.one;
 
                     //position and orientation are based on the controllers
                     midpoint = (leftControllerPosition + rightControllerPosition + 2 * transform.GetChild(3).transform.position) / 2; //CLOSE BUT NOT PERFECT
@@ -106,6 +110,7 @@ public class PortalSpawner : MonoBehaviour
                     if (leftTriggerHeld & rightTriggerHeld)
                     {
                         portal.transform.localScale = portalHolo.transform.localScale;
+                        portal.GetComponent<Portal>().SetRate(minScale, midScale, maxScale);
                         Destroy(portalHolo);
                         lockPortal = true;
                     }
