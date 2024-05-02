@@ -38,12 +38,12 @@ public class TriangleShipProjectile : MonoBehaviour
         DestroyProjectile();
 
         //do damage if hit ship(   322211111111) <- cats contribution
-        if (collision.gameObject.name.Contains("TriangleShip"))
-        {
+        //if (collision.gameObject.name.Contains("TriangleShip"))
+        //{
             //friendly fire
-            collision.gameObject.GetComponent<TriangleShipBehaviour>().health -= 1;
-        }
-        else if (collision.gameObject.name.Contains("CubeShip"))
+        //    collision.gameObject.GetComponent<TriangleShipBehaviour>().health -= 1;
+        //}
+        if (collision.gameObject.name.Contains("CubeShip"))
         {
             collision.gameObject.GetComponent<CubeShipBehaviour>().health -= 1;
         }

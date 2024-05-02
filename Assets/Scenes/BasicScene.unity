@@ -958,7 +958,7 @@ PrefabInstance:
       objectReference: {fileID: 1664824757}
     - target: {fileID: 791706636131121220, guid: 25759e874228f7b4a872820d74b4f484, type: 3}
       propertyPath: health
-      value: 1
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 791706636131121220, guid: 25759e874228f7b4a872820d74b4f484, type: 3}
       propertyPath: jitter

@@ -46,10 +46,10 @@ public class CubeShipProjectile : MonoBehaviour
         {
             collision.gameObject.GetComponent<TriangleShipBehaviour>().health -= 1;
         }
-        else if (collision.gameObject.name.Contains("CubeShip"))
-        {
+        //else if (collision.gameObject.name.Contains("CubeShip"))
+        //{
             //friendly fire
-            collision.gameObject.GetComponent<CubeShipBehaviour>().health -= 1;
-        }
+        //    collision.gameObject.GetComponent<CubeShipBehaviour>().health -= 1;
+        //}
     }
 }
