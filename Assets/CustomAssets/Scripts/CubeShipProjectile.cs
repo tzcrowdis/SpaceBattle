@@ -39,7 +39,8 @@ public class CubeShipProjectile : MonoBehaviour
     {
         //Debug.Log(collision.gameObject.name);
 
-        DestroyProjectile();
+        if (collision.gameObject.name != "Plane")
+            DestroyProjectile();
 
         //do damage if hit ship
         if (collision.gameObject.name.Contains("TriangleShip"))

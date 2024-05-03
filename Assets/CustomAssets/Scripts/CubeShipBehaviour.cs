@@ -24,7 +24,7 @@ public class CubeShipBehaviour : MonoBehaviour
 
     //patrol vars
     public float patrolSpeed;
-    Vector3 patrolDirection = Vector3.up; //temp, should get from central command
+    Vector3 patrolDirection;
 
     //charge vars
     Vector3 center;
@@ -44,6 +44,7 @@ public class CubeShipBehaviour : MonoBehaviour
     bool reloading;
     
     public GameObject enemy;
+    CentralCommand cc;
     
     enum State
     {
@@ -72,17 +73,23 @@ public class CubeShipBehaviour : MonoBehaviour
         shootPosition = shootPivot.GetChild(0);
         shootTime = 0f;
         reloading = false;
-        
+
+        patrolDirection = transform.forward;
+
         state = State.Patrol;
+
+        cc = GameObject.Find("CentralCommand").GetComponent<CentralCommand>();
     }
 
     void Update()
     {
-        GetState();
-        Act();
-
         if (health <= 0)
             BlowUp();
+        else
+        {
+            GetState();
+            Act();
+        }
     }
 
     void GetState()
@@ -98,7 +105,9 @@ public class CubeShipBehaviour : MonoBehaviour
         }
         else
         {
-            state = State.Patrol;
+            GetNextEnemy();
+            if (enemy == null)
+                state = State.Patrol;
         }
     }
 
@@ -170,12 +179,19 @@ public class CubeShipBehaviour : MonoBehaviour
         transform.position += patrolSpeed * patrolDirection * Time.deltaTime;
     }
 
+    void GetNextEnemy()
+    {
+        enemy = cc.NearestEnemy(gameObject);
+    }
+
     void BlowUp()
     {
         explosion = Instantiate(explosionResource, transform.position, Quaternion.identity);
         var main = explosion.GetComponent<ParticleSystem>().main;
         main.startSize = 3f;
         main.startColor = Color.white;
+
+        cc.RemoveShip(gameObject);
 
         Destroy(gameObject);
     }

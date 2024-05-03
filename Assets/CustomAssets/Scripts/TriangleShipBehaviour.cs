@@ -39,6 +39,7 @@ public class TriangleShipBehaviour : MonoBehaviour
     //enemy vars
     public GameObject enemy;
     float distanceToEnemy;
+    CentralCommand cc;
 
     //wait vars
     public float waitNewRotationTime;
@@ -67,15 +68,20 @@ public class TriangleShipBehaviour : MonoBehaviour
         waitTime = waitNewRotationTime;
         
         state = State.Find;
+
+        cc = GameObject.Find("CentralCommand").GetComponent<CentralCommand>();
+        cc.AddTriangle(gameObject);
     }
 
     void Update()
     {
-        GetNextState();
-        Act();
-
         if (health <= 0)
             BlowUp();
+        else
+        {
+            GetNextState();
+            Act();
+        }
     }
 
     void Act()
@@ -217,7 +223,7 @@ public class TriangleShipBehaviour : MonoBehaviour
     void GetNextEnemy()
     {
         //get game object of enemy
-        //closest or some other criteria
+        enemy = cc.NearestEnemy(gameObject);
     }
 
     void BlowUp()
@@ -226,6 +232,8 @@ public class TriangleShipBehaviour : MonoBehaviour
         var main = explosion.GetComponent<ParticleSystem>().main;
         main.startSize = 2.5f;
         main.startColor = Color.blue;
+
+        cc.RemoveShip(gameObject);
 
         Destroy(gameObject);
     }

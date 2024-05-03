@@ -17,13 +17,6 @@ public class PortalSpawner : MonoBehaviour
 
     Vector3 midpoint;
 
-    Quaternion temp;
-    Vector3 leftControllerRotation;
-    Vector3 rightControllerRotation;
-    Vector3 previousRotation;
-    Vector3 currentRotation;
-    Vector3 deltaRotation;
-
     float previousDistance = 0f;
     float currentDistance;
     float deltaDistance = 0f;
@@ -32,6 +25,8 @@ public class PortalSpawner : MonoBehaviour
     bool rightTriggerHeld;
     bool leftGripHeld;
     bool rightGripHeld;
+
+    GameObject headset;
 
     //portal vars
     GameObject portalResource;
@@ -47,6 +42,8 @@ public class PortalSpawner : MonoBehaviour
     void Start()
     {
         portalResource = Resources.Load("Portal") as GameObject;
+
+        headset = GameObject.Find("Main Camera");
     }
 
     void Update()
@@ -96,20 +93,22 @@ public class PortalSpawner : MonoBehaviour
                     else if (0.2f < portal.transform.localScale.x & portal.transform.localScale.x < 0.3f)
                         portalHolo.transform.localScale = maxScale * Vector3.one;
 
-                    //position and orientation are based on the controllers
+                    //position based on the controllers
                     midpoint = (leftControllerPosition + rightControllerPosition + 2 * transform.GetChild(3).transform.position) / 2; //CLOSE BUT NOT PERFECT
                     portal.transform.position = midpoint;
                     portalHolo.transform.position = midpoint;
 
-                    //TODO: FIX ROTATION
-                    //portal.transform.rotation = Quaternion.Euler(leftControllerRotation + new Vector3(90f, 0f, 0f));
-                    //portal.transform.Rotate(deltaRotation);
-                    //portal.transform.rotation = Quaternion.LookRotation(currentRotation);
+                    //orientation based on where camera is looking
+                    portal.transform.rotation = headset.transform.rotation;
+                    portalHolo.transform.rotation = headset.transform.rotation;
 
                     //lock in portal
                     if (leftTriggerHeld & rightTriggerHeld)
                     {
                         portal.transform.localScale = portalHolo.transform.localScale;
+                        var color = portal.GetComponent<Renderer>().material.color;
+                        color.a = 1f;
+                        portal.GetComponent<Renderer>().material.color = color;
                         portal.GetComponent<Portal>().SetRate(minScale, midScale, maxScale);
                         Destroy(portalHolo);
                         lockPortal = true;
@@ -143,16 +142,6 @@ public class PortalSpawner : MonoBehaviour
         currentDistance = Vector3.Distance(leftControllerPosition, rightControllerPosition);
         deltaDistance = currentDistance - previousDistance;
         previousDistance = currentDistance;
-
-        //rotation
-        leftController.TryGetFeatureValue(CommonUsages.deviceRotation, out temp);
-        leftControllerRotation = temp.eulerAngles;
-        rightController.TryGetFeatureValue(CommonUsages.deviceRotation, out temp);
-        rightControllerRotation = temp.eulerAngles;
-
-        //currentRotation = (leftControllerRotation + rightControllerRotation) / 2;
-        //deltaRotation = currentRotation - previousRotation;
-        //previousRotation = currentRotation;
 
         //trigger
         leftController.TryGetFeatureValue(CommonUsages.triggerButton, out leftTriggerHeld);
