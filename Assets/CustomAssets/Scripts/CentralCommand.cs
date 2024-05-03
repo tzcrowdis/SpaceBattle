@@ -8,17 +8,8 @@ public class CentralCommand : MonoBehaviour
 {
     public List<GameObject> cubes = new List<GameObject>();
     List<GameObject> triangles = new List<GameObject>();
-    
-    void Start()
-    {
-        
-    }
 
-    void Update()
-    {
-        
-    }
-
+    //returns the nearest ship that isn't already targeted
     public GameObject NearestEnemy(GameObject ship)
     {
         GameObject target = null;
@@ -33,13 +24,17 @@ public class CentralCommand : MonoBehaviour
                     if (cube != null)
                     {
                         dist = Vector3.Distance(ship.transform.position, cube.transform.position);
-                        if (dist < minDistance)
+                        if (dist < minDistance & !Targeted(cube))
                         {
                             minDistance = dist;
                             target = cube;
                         }
                     }
                 }
+
+                //in case all ships are targeted focus remaining fleet
+                if (cubes.Count > 0 & target == null)
+                    target = cubes[0];
             }
         }
         else
@@ -53,24 +48,53 @@ public class CentralCommand : MonoBehaviour
                     if (triangle != null)
                     {
                         dist = Vector3.Distance(ship.transform.position, triangle.transform.position);
-                        if (dist < minDistance)
+                        if (dist < minDistance & !Targeted(triangle))
                         {
                             minDistance = dist;
                             target = triangle;
                         }
                     }
                 }
+
+                //in case all ships are targeted focus remaining fleet
+                if (triangles.Count > 0 & target == null)
+                    target = triangles[0];
             }
         }
 
         return target;
     }
 
+    //returns true if a friendly ship is already attacking the target
+    bool Targeted(GameObject target)
+    {
+        if (target.name.Contains("Cube"))
+        {
+            foreach (GameObject triangle in triangles)
+            {
+                if (triangle != null && triangle.GetComponent<TriangleShipBehaviour>().enemy == target)
+                    return true;
+            }
+        }
+        else
+        {
+            foreach (GameObject cube in cubes)
+            {
+                if (cube != null && cube.GetComponent<CubeShipBehaviour>().enemy == target)
+                    return true;
+            }
+        }
+
+        return false;
+    }
+
+    //adds triangle
     public void AddTriangle(GameObject triangle)
     {
         triangles.Add(triangle);
     }
 
+    //removes ship from list
     public void RemoveShip(GameObject ship)
     {
         if (gameObject.name.Contains("Triangle"))

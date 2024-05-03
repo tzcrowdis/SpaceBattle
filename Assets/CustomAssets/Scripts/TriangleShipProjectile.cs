@@ -7,12 +7,14 @@ public class TriangleShipProjectile : MonoBehaviour
     GameObject explosionResource;
     GameObject explosion;
 
-    float lifetime = 20f;
+    float lifetime = 7f;
     float t = 0f;
 
     void Start()
     {
         explosionResource = Resources.Load("ExplosionParticles") as GameObject;
+
+        Physics.IgnoreCollision(gameObject.GetComponent<Collider>(), GameObject.Find("Plane").GetComponent<Collider>());
     }
 
     void Update()
@@ -33,8 +35,7 @@ public class TriangleShipProjectile : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        if (collision.gameObject.name != "Plane")
-            DestroyProjectile();
+        DestroyProjectile();
 
         //do damage if hit ship(   322211111111) <- cats contribution
         //if (collision.gameObject.name.Contains("TriangleShip"))

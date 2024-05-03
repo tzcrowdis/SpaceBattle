@@ -7,14 +7,16 @@ public class CubeShipProjectile : MonoBehaviour
     GameObject explosionResource;
     GameObject explosion;
     
-    Vector3 rotationVec = new Vector3(0f, 0f, 1f);
+    Vector3 rotationVec = new Vector3(0f, 0f, 5f);
 
-    float lifetime = 20f;
+    float lifetime = 7f;
     float t = 0f;
 
     void Start()
     {
         explosionResource = Resources.Load("ExplosionParticles") as GameObject;
+
+        Physics.IgnoreCollision(gameObject.GetComponent<Collider>(), GameObject.Find("Plane").GetComponent<Collider>());
     }
 
     void Update()
@@ -39,8 +41,7 @@ public class CubeShipProjectile : MonoBehaviour
     {
         //Debug.Log(collision.gameObject.name);
 
-        if (collision.gameObject.name != "Plane")
-            DestroyProjectile();
+        DestroyProjectile();
 
         //do damage if hit ship
         if (collision.gameObject.name.Contains("TriangleShip"))
